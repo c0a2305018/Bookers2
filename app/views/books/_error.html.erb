@@ -1,0 +1,10 @@
+<% if @book.errors.any? %>
+  <div class="fs-4 fw-bold mb-2">
+    <%= pluralize(@book.errors.count, "error") %> prohibited this obj from being saved:
+  </div>
+  <ul class="fs-5">
+    <% @book.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>

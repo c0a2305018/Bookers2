@@ -1,0 +1,43 @@
+<% if @user.errors.any? %>
+  <div class="alert alert-danger">
+    <p><%= @user.errors.count %> error(s) prohibited this user from being saved:</p>
+    <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-start"> <!-- ★ ここを text-center → text-start -->
+
+      <h2 class="mb-4 fw-bold">User info</h2>
+
+      <%= form_with model: @user, local: true, html: { multipart: true } do |f| %>
+
+        <div class="mb-3">
+          <%= f.label :name, "Name" %>
+          <%= f.text_field :name, class: "form-control", placeholder: "名前" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :profile_image, "Image" %><br>
+          <%= f.file_field :profile_image, accept: "image/*" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :introduction, "Introduction" %>
+          <%= f.text_area :introduction, class: "form-control", rows: 3, placeholder: "自己紹介を入力" %>
+        </div>
+
+        <div class="text-center">
+          <%= f.submit "Update User", class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+
+
+    </div>
+  </div>
+</div>
