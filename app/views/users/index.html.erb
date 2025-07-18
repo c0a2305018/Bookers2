@@ -12,7 +12,7 @@
       <% if current_user.profile_image.attached? %>
         <%= image_tag current_user.profile_image.variant(resize_to_limit: [100, 100]) %>
       <% else %>
-        <%= image_tag 'default-user.jpg', size: "100x100" %>
+        <%= image_tag 'no_image.jpg', size: "100x100" %>
       <% end %>
     
       <!-- ユーザー情報 -->
@@ -27,14 +27,14 @@
         </tr>
       </table>
     
-      <!-- 編集ボタン（全幅＋中央＋アイコンのみ） -->
-      <%= link_to edit_user_path(current_user.id), class: 'btn btn-outline-secondary w-100 mb-4 text-center' do %>
+      <!-- 編集ボタン -->
+      <%= link_to edit_user_path(@user), class: 'btn btn-outline-secondary w-100 mb-4 text-center' do %>
         <i class="fa-solid fa-user-gear"></i>
       <% end %>
     
       <!-- New book投稿フォーム -->
       <h1>New book</h1>
-      <%= form_with model: @book, url: books_path, method: :post, local: true do |f| %>
+      <%= form_with model: Book.new, url: books_path, method: :post, local: true do |f| %>
         <div class="mb-2">
           <%= f.label :title, "Title" %>
           <%= f.text_field :title, class: "form-control" %>
@@ -67,7 +67,7 @@
                 <% if user.profile_image.attached? %>
                   <%= image_tag user.profile_image.variant(resize_to_limit: [100, 100]) %>
                 <% else %>
-                  <%= image_tag 'default-user.jpg', size: "100x100" %>
+                  <%= image_tag 'no_image.jpg', size: "100x100" %>
                 <% end %>
               </td>
               <td><%= user.name %></td>

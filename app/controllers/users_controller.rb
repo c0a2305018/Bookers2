@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user! 
   before_action :is_matching_login_user, only: [:edit, :update]
-  before_action :authenticate_user!  
+
   def new
-    @user=User.new
+    @user = User.new
   end
 
   def show
@@ -12,25 +13,23 @@ class UsersController < ApplicationController
       @books = @user.books
     rescue ActiveRecord::RecordNotFound
       redirect_to root_path, alert: "ユーザーが見つかりませんでした。"
-    end   
+    end
     @book = Book.new
   end
 
   def index
-      @login_user = current_user
-      @users=User.all
-      @book = Book.new
-      @user = current_user
+    @login_user = current_user
+    @users = User.all
+    @book = Book.new
+    @user = current_user
   end
 
   def edit
-    is_matching_login_user
-    @user=User.find(params[:id])
+    @user = User.find(params[:id])
   end
 
   def update
-    is_matching_login_user
-    @user=User.find(params[:id])
+    @user = User.find(params[:id])
     if @user.update(user_params)
       flash[:notice] = 'You have updated user successfully.'
       redirect_to user_path(@user.id)
@@ -39,20 +38,19 @@ class UsersController < ApplicationController
     end
   end
 
-
   private
-  def set_user
-    @user = current_user
-  end
 
   def user_params
-    params.require(:user).permit(:name,:introduction,:profile_image)
+    params.require(:user).permit(:name, :introduction, :profile_image)
   end
 
+  # アクセス制限（ログインユーザーと編集対象が一致しないとき自分のページへ）
   def is_matching_login_user
+    return redirect_to new_user_session_path unless current_user
+
     user = User.find(params[:id])
     unless user.id == current_user.id
-      redirect_to user_path(current_user.id)
+      redirect_to user_path(current_user)
     end
   end
 end
