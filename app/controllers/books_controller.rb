@@ -22,11 +22,13 @@ class BooksController < ApplicationController
 
   def index
     @login_user = current_user
-    @books=Book.includes(:user).all
-    @book=Book.new
+    @books= Book.includes(:user).all
+    @book= Book.new
     @users = User.all 
     @books = Book.all
     @user = current_user
+    @books = Book.all.includes(:user, :post_comments)
+    @comment = PostComment.new
   end
 
   def edit
@@ -42,6 +44,8 @@ class BooksController < ApplicationController
     @user = @book.user
     @new_book = Book.new(params[:book])
     @books = @user.books
+
+    @comment = PostComment.new
   end
 
   def update

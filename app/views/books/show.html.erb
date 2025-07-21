@@ -1,7 +1,6 @@
 <!-- booksからtitle押したとき -->
 <!-- Homeからtitle押したとき -->
 
-
 <% if @new_book.errors.any? %>
   <div class="alert alert-danger">
     <p><%= @new_book.errors.count %> error(s) prohibited this book from being saved:</p>
@@ -15,10 +14,10 @@
 
 <div class="container">
   <div class="row">
-    <!--  左カラム  -->
+    <!-- 左カラム：ユーザー情報と新規投稿フォーム -->
     <div class="col-md-3">
       <h1>User info</h1>
-    
+
       <!-- プロフィール画像 -->
       <%= link_to user_path(@book.user) do %>
         <% if @book.user.profile_image.attached? %>
@@ -27,10 +26,8 @@
           <%= image_tag 'no_image.jpg', size: "100x100" %>
         <% end %>
       <% end %>
-      
-      
-    
-      <!-- ユーザー情報 -->
+
+      <!-- ユーザー情報テーブル -->
       <table class="table table-sm">
         <tr>
           <th>name</th>
@@ -41,32 +38,30 @@
           <td><%= @book.user.introduction %></td>
         </tr>
       </table>
-      
-    
-      <!-- 編集ボタン -->
+
+      <!-- ユーザー編集ボタン -->
       <%= link_to edit_user_path(@user), class: 'btn btn-outline-secondary w-100 mb-4 text-center' do %>
         <i class="fa-solid fa-user-gear"></i>
       <% end %>
-      
-    
-      <!-- New book投稿フォーム -->
+
+      <!-- 新規Book投稿フォーム -->
       <h1>New book</h1>
       <%= form_with model: Book.new, url: books_path, method: :post, local: true do |f| %>
         <div class="mb-2">
           <%= f.label :title, "Title" %>
           <%= f.text_field :title, class: "form-control" %>
         </div>
-    
+
         <div class="mb-2">
           <%= f.label :body, "Opinion" %>
           <%= f.text_area :body, class: "form-control" %>
         </div>
-    
+
         <%= f.submit 'Create Book', class: 'btn btn-success' %>
       <% end %>
     </div>
 
-    <!-- 右カラム：Book 詳細 -->
+    <!-- 右カラム：Book 詳細とコメント -->
     <div class="col-md-8 offset-md-1">
       <h3>Book detail</h3>
       <table>
@@ -99,6 +94,26 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- コメント -->
+      <p>コメント件数：<%= @book.post_comments.count %></p>
+      <% @book.post_comments.each do |postcomment| %>
+        <p><%= image_tag postcomment.user.get_profile_image(40, 40) %></p>
+        <%= postcomment.user.name %><br>
+        <%= postcomment.created_at.strftime('%Y/%m/%d') %><br>
+        <%= postcomment.comment %>
+        <% if postcomment.user == current_user %>
+          <%= link_to "削除", book_post_comment_path(@book, postcomment), method: :delete, data: { confirm: "本当に削除しますか？" } %>
+        <% end %>
+
+      <% end %>
+      
+
+      <div>
+      <%= form_with model: [@book, @comment] do |f| %>
+        <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
+        <%= f.submit "送信する" %>
+      <% end %>
     </div>
   </div>
 </div>
