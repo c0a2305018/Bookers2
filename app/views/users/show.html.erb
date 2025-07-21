@@ -1,7 +1,6 @@
 <!-- Home押したとき -->
 <!-- Usersからshow押したとき -->
 
-
 <%= render 'books/error', books: @book %>
 
 <div class="container">
@@ -63,6 +62,7 @@
             <th>Title</th>
             <th>Opinion</th>
             <th>Comments</th>
+            <th>Like</th> <!-- 👍 いいねカラム -->
           </tr>
         </thead>
         <tbody>
@@ -79,8 +79,21 @@
               </td>
               <td><%= link_to book.title, book_path(book.id) %></td>
               <td><%= book.body %></td>
+              <td><%= link_to "#{book.book_comments.count} コメント", book_path(book.id) %></td>
 
-              <td><%= link_to "#{book.post_comments.count} コメント", book_path(book.id) %></td>
+              <!-- いいね機能 -->
+              <td>
+                <% if book.favorited_by?(current_user) %>
+                  <%= link_to book_favorite_path(book), method: :delete do %>
+                    <i class="fa fa-heart text-danger"></i> <%= book.favorites.count %> いいね
+                  <% end %>
+                <% else %>
+                  <%= link_to book_favorite_path(book), method: :post do %>
+                    <i class="fa fa-heart fa-heart-o"></i> <%= book.favorites.count %> いいね
+                  <% end %>
+                <% end %>
+              </td>
+
             </tr>
           <% end %>
         </tbody>
